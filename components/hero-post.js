@@ -4,6 +4,7 @@ import CoverImage from '../components/cover-image'
 import Link from 'next/link'
 
 export default function HeroPost({
+  data,
   title,
   coverImage,
   date,
@@ -11,8 +12,10 @@ export default function HeroPost({
   author,
   slug,
 }) {
+
   return (
     <section>
+      {console.log({data})}
       <div className="mb-8 md:mb-16">
         {coverImage && (
           <CoverImage title={title} coverImage={coverImage} slug={slug} />
