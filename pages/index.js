@@ -1,17 +1,17 @@
 import Head from 'next/head'
 import Container from '../components/container'
-import MoreStories from '../components/more-stories'
-import HeroPost from '../components/hero-post'
+// import MoreStories from '../components/more-stories'
+// import HeroPost from '../components/hero-post'
 import Intro from '../components/intro'
 import Layout from '../components/layout'
-import { getAllPostsForHome } from '../lib/api'
-import { getSpanishOnlyPost } from '../lib/api'
+import { getAllPostsForHome, getAllPostsForHomeES } from '../lib/api'
 import { CMS_NAME } from '../lib/constants'
 
-export default function Index({ allPosts: { edges }, preview, esPost  }) {
-  const heroPost = edges[0]?.node
-  const morePosts = edges.slice(1)
-  const spanishHeroPost = esPost.edges[0]?.node.translation
+export default function Index({ allPosts: { nodes }, preview  }) {
+
+  console.log( nodes );
+  const heroPost = nodes[0]?.node
+  const morePosts = nodes.slice(1)
 
   return (
     <>
@@ -21,18 +21,16 @@ export default function Index({ allPosts: { edges }, preview, esPost  }) {
         </Head>
         <Container>
           <Intro />
-          {console.log(esPost)}
-          {esPost && (
-            <HeroPost
-              title={spanishHeroPost.title}
-              // coverImage={heroPost.featuredImage?.node}
-              date={heroPost.date}
-              // author={heroPost.author?.node}
-              slug={spanishHeroPost.uri}
-              excerpt={spanishHeroPost.content}
-            />
+          {heroPost && (
+            <div>
+              <h2>{heroPost.title}</h2>
+              <img src={heroPost.featuredImage?.node} />
+              <small>{heroPost.date}</small>
+              <author>{heroPost.author?.node}</author>
+              <p>{heroPost.excerpt}</p>
+            </div>
           )}
-          {morePosts.length > 0 && <MoreStories posts={morePosts} />}
+          {/* {morePosts.length > 0 && <MoreStories posts={morePosts} />} */}
         </Container>
       </Layout>
     </>
@@ -40,9 +38,12 @@ export default function Index({ allPosts: { edges }, preview, esPost  }) {
 }
 
 export async function getStaticProps({ preview = false }) {
-  const allPosts = await getAllPostsForHome(preview)
-  const esPost = await getSpanishOnlyPost()
+
+  const language = 'ES'
+
+  const allPosts = language === 'EN' ? await getAllPostsForHome(preview) : language === 'ES' ? await getAllPostsForHomeES(preview) : await getAllPostsForHome(preview)
+
   return {
-    props: { allPosts, preview, esPost },
+    props: { allPosts, preview },
   }
 }
