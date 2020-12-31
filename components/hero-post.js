@@ -15,7 +15,6 @@ export default function HeroPost({
 
   return (
     <section>
-      {console.log({data})}
       <div className="mb-8 md:mb-16">
         {coverImage && (
           <CoverImage title={title} coverImage={coverImage} slug={slug} />
